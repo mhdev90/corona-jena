@@ -1,7 +1,7 @@
 load "template.gnuplot"
 
 set datafile separator ','
-set output '../cases_jena_opendata.png'
+set output '../plot_jena_opendata.png'
 
 stats "<awk -F ',' '{print $1}' ../data/cases_jena_opendata.csv" using 1 nooutput
 set xrange [ STATS_min - 86400 : STATS_max + 86400 ]
