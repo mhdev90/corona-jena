@@ -21,8 +21,8 @@ if __name__ == "__main__":
     DATAFILE = SCRIPTPATH + "/../data/cases_thuringia.dat"
     TEMPLATE = SCRIPTPATH + "/TH.svg.template"
     SVGFILE  = SCRIPTPATH + "/map_th.svg"
-    PNGFILE  = SCRIPTPATH + "/../map_th.png"
-    PNGFILET = SCRIPTPATH + "/../map_th.tmp.png"
+    PNGFILE  = SCRIPTPATH + "/../map_th_rel.png"
+    PNGFILET = SCRIPTPATH + "/../map_th_rel.tmp.png"
     
     # list of placeholders for the colors in the SVG template
     replace_array  = {
@@ -51,6 +51,34 @@ if __name__ == "__main__":
         "Weimarer Land": "%FC_AP%"
     }
     
+    # number of residents per city/county; values taken from:
+    # https://statistik.thueringen.de/datenbank/TabAnzeige.asp?tabelle=gg000102&startpage=99&vorspalte=1&felder=2&zeit=2018%7C%7Cs1
+    residents_array  = {
+        "Altenburger Land": 90118,
+        "Eichsfeld":  100380,
+        "Eisenach": 42370,
+        "Erfurt":  213699,
+        "Gera": 94152,
+        "Gotha":  135452,
+        "Greiz": 98159,
+        "Hildburghausen": 63553,
+        "Ilm-Kreis":  108742,
+        "Jena": 111407,
+        "Kyffhäuserkreis": 75009,
+        "Nordhausen": 83822,
+        "Saale-Holzland-Kreis": 83051,
+        "Saale-Orla-Kreis": 80868,
+        "Saalfeld-Rudolstadt":  106356,
+        "Schmalkalden-Meiningen": 122347,
+        "Sömmerda": 69655,
+        "Sonneberg": 56196,
+        "Suhl": 34835,
+        "Unstrut-Hainich-Kreis":  102912,
+        "Wartburgkreis":  123025,
+        "Weimar": 65090,
+        "Weimarer Land": 81947
+    }
+    
     try:
         
         # read data file
@@ -61,17 +89,15 @@ if __name__ == "__main__":
         timestamp = int(rawdata[-1].split(",")[0])
         
         # count total cases and assign cases
-        sum_cases = 0
         max_cases = 0
         area_data = {}
         for l in rawdata:
             ds = l.split(",")
             if ( len(ds) == 8 ):
                 if ( int(ds[0]) == timestamp ):
-                    area_data[ds[1]] = int(ds[3])
-                    sum_cases += int(ds[3])
-                    if ( int(ds[3]) > max_cases ):
-                        max_cases = int(ds[3])
+                    area_data[ds[1]] = int(ds[3]) / int(residents_array[ds[1]]) * 100000
+                    if ( area_data[ds[1]] > max_cases ):
+                        max_cases = area_data[ds[1]]
 
         # read SVG template
         with open(TEMPLATE, "r") as df:
@@ -82,10 +108,10 @@ if __name__ == "__main__":
             svgdata = svgdata.replace(r, area_color)
 
         # change labels
-        svgdata = svgdata.replace("%TITLE%", "Fallzahlen nach Landkreis/Stadt")
-        svgdata = svgdata.replace("%MIN_VAL%", "0 Fälle")
-        svgdata = svgdata.replace("%MID_VAL%", "%i Fälle" % (int(max_cases/2)))
-        svgdata = svgdata.replace("%MAX_VAL%", "%i Fälle" % (max_cases))
+        svgdata = svgdata.replace("%TITLE%", "relative Fallzahlen pro 100.000 EW")
+        svgdata = svgdata.replace("%MIN_VAL%", "0 Fälle / 100.000 EW")
+        svgdata = svgdata.replace("%MID_VAL%", "%i Fälle / 100.000 EW" % (int(max_cases/2)))
+        svgdata = svgdata.replace("%MAX_VAL%", "%i Fälle / 100.000 EW" % (int(max_cases)))
         now = datetime.fromtimestamp(timestamp)
         svgdata = svgdata.replace("%DATE%", now.strftime("letzte Aktualisierung: %d.%m.%Y"))
             
