@@ -18,7 +18,10 @@ unset ylabel
 
 set key at graph 0.02, 0.98 left top invert spacing 1.5 box ls 3
 
+# remove latest update
+update_str = ""
+
 plot \
   1/0 lc rgb '#f2f2f2' title update_str, \
-  '../data/cases_jena_opendata.csv' using 1:2 with linespoints ls 1 lc rgb '#133370' title 'bestätigte Fälle', \
-  '../data/cases_jena_opendata.csv' using 1:($2-$3-$4) with linespoints ls 1 lc rgb '#5B8F22' title 'aktive Fälle'
+  '../data/cases_jena_opendata.csv' using 1:($2-$3-$4) with linespoints ls 1 lc rgb '#133370' title 'aktive Fälle', \
+  '../data/cases_jena_opendata.csv' using 1:2 with linespoints ls 1 lc rgb '#C4262E' title 'bestätigte Fälle'
