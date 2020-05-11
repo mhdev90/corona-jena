@@ -11,20 +11,20 @@ unset key
 unset tics
 unset border
 
-# get sum of infected
-stats "<awk -F, '{print $1,$2,$3,$4,$5}' ../data/cases_jena_opendata.csv" u 2 prefix "A" nooutput
+# get latest sum of infected
+stats "<awk -F, 'END{print $1,$2,$3,$4,$5}' ../data/cases_jena_opendata.csv" u 2 prefix "A" nooutput
 
-# get maximum number of recovered
-stats "<awk -F, '{print $1,$2,$3,$4,$5}' ../data/cases_jena_opendata.csv" u 3 prefix "B" nooutput
+# get latest number of recovered
+stats "<awk -F, 'END{print $1,$2,$3,$4,$5}' ../data/cases_jena_opendata.csv" u 3 prefix "B" nooutput
 
-# get maximum number of deceased
-stats "<awk -F, '{print $1,$2,$3,$4,$5}' ../data/cases_jena_opendata.csv" u 4 prefix "C" nooutput
+# get latest number of deceased
+stats "<awk -F, 'END{print $1,$2,$3,$4,$5}' ../data/cases_jena_opendata.csv" u 4 prefix "C" nooutput
 
-# get number of hospitalized
-stats "<awk -F, '{print $1,$2,$3,$4,$5,$6}' ../data/cases_jena_opendata.csv | tail -n 1" u 5 prefix "E" nooutput
+# get latest of hospitalized
+stats "<awk -F, 'END{print $1,$2,$3,$4,$5,$6}' ../data/cases_jena_opendata.csv | tail -n 1" u 5 prefix "E" nooutput
 
-# get number of severe
-stats "<awk -F, '{print $1,$2,$3,$4,$5,$6}' ../data/cases_jena_opendata.csv | tail -n 1" u 6 prefix "F" nooutput
+# get latest of severe
+stats "<awk -F, 'END{print $1,$2,$3,$4,$5,$6}' ../data/cases_jena_opendata.csv | tail -n 1" u 6 prefix "F" nooutput
 
 angle(x)=x*360/A_max
 
